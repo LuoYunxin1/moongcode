@@ -331,3 +331,36 @@ pub fn safety_report_text(report : SafetyReport) -> String {
   }
   result
 }
+
+///|
+/// Render a compact Markdown artifact suitable for CI summaries.
+pub fn safety_report_markdown(report : SafetyReport) -> String {
+  let stats = report.stats()
+  let mut result = if report.passed() {
+    "# MoonGCode audit: PASS"
+  } else {
+    "# MoonGCode audit: FAIL"
+  }
+  result += "\n\n| Metric | Value |\n| --- | ---: |"
+  result += "\n| Segments | " + stats.segment_count().to_string() + " |"
+  result += "\n| Distance (mm) | " +
+    stats.total_distance_mm().to_string() +
+    " |"
+  result += "\n| Estimated time (s) | " +
+    stats.estimated_seconds().to_string() +
+    " |"
+  result += "\n\n## Findings"
+  if report.findings().is_empty() {
+    result += "\n\nNone."
+  } else {
+    for finding in report.findings() {
+      result += "\n\n- `" +
+        finding.code() +
+        "` line " +
+        finding.line().to_string() +
+        ": " +
+        finding.message()
+    }
+  }
+  result
+}

@@ -112,3 +112,12 @@ test "statistics text includes envelope and distance classes" {
   assert_true(text.contains("bounds=(0,0,0)..(10,0,0)"))
   assert_true(text.contains("estimated_seconds=10"))
 }
+
+///|
+test "markdown report exposes decision metrics and findings" {
+  let report = audited("M30\n")
+  let markdown = safety_report_markdown(report)
+  assert_true(markdown.has_prefix("# MoonGCode audit: PASS"))
+  assert_true(markdown.contains("| Segments | 0 |"))
+  assert_true(markdown.contains("`audit.program.empty` line 0"))
+}
