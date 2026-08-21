@@ -37,6 +37,10 @@ jobs:
           grep -q '^PASS$' demo.txt
           moon run cmd/main --target js -- audit examples/safe.nc | tee audit.txt
           grep -q '^PASS$' audit.txt
+          moon run cmd/main --target js -- audit examples/inches.nc | tee inches.txt
+          grep -q '^PASS$' inches.txt
+          moon run cmd/main --target js -- audit-profile examples/safe.nc examples/desktop-mill.profile | tee profile.txt
+          grep -q '^PASS$' profile.txt
           moon run cmd/main --target js -- audit examples/unsafe.nc > unsafe.txt || test "$?" -eq 1
           grep -q '^FAIL$' unsafe.txt
 

@@ -27,6 +27,7 @@ moon run cmd/main -- explain examples/safe.nc
 ```
 
 `audit` uses the deterministic `desktop-mill` profile. Applications can parse and construct their own `MachineProfile` values through the library API.
+The fixtures also include `examples/inches.nc` to demonstrate deterministic inch-to-millimetre conversion.
 
 ## Library workflow
 
