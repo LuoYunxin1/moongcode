@@ -64,6 +64,29 @@ pub fn ToolpathStats::bounds(self : ToolpathStats) -> Bounds3? {
 }
 
 ///|
+/// Render stable metrics including the complete geometric envelope.
+pub fn ToolpathStats::to_text(self : ToolpathStats) -> String {
+  let mut result = "segments=" + self.segment_count.to_string()
+  result += " rapid=" + self.rapid_count.to_string()
+  result += " cutting=" + self.cutting_count.to_string()
+  result += " dwell=" + self.dwell_count.to_string()
+  result += "\ndistance_mm=" + self.total_distance_mm.to_string()
+  result += " rapid_mm=" + self.rapid_distance_mm.to_string()
+  result += " cutting_mm=" + self.cutting_distance_mm.to_string()
+  result += " arc_mm=" + self.arc_distance_mm.to_string()
+  result += "\nestimated_seconds=" + self.estimated_seconds.to_string()
+  match self.bounds {
+    None => result += "\nbounds=empty"
+    Some(bounds) =>
+      result += "\nbounds=" +
+        bounds.min().to_text() +
+        ".." +
+        bounds.max().to_text()
+  }
+  result
+}
+
+///|
 fn audit_add_bounds(current : Bounds3?, next : Bounds3) -> Bounds3 {
   match current {
     None => next

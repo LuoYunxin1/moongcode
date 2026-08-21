@@ -93,3 +93,14 @@ test "report text is deterministic" {
   let text = safety_report_text(audited("M30\n"))
   assert_true(text.has_prefix("PASS\nsegments=0"))
 }
+
+///|
+test "statistics text includes envelope and distance classes" {
+  let stats = analyze_execution(
+    interpret_source("G21 F60 M3 S100\nG1 X10\nM5 M30\n"),
+  )
+  let text = stats.to_text()
+  assert_true(text.contains("segments=1 rapid=0 cutting=1 dwell=0"))
+  assert_true(text.contains("bounds=(0,0,0)..(10,0,0)"))
+  assert_true(text.contains("estimated_seconds=10"))
+}
