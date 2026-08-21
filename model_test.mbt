@@ -27,3 +27,15 @@ test "diagnostic text is stable" {
   let item = Diagnostic::error("parse.word", 3, 7, "missing numeric value")
   assert_eq(item.to_text(), "error[parse.word] line 3:7 missing numeric value")
 }
+
+///|
+test "diagnostic queries preserve severity and code" {
+  let values = [
+    Diagnostic::error("same", 1, 1, "first"),
+    Diagnostic::warning("same", 2, 1, "second"),
+    Diagnostic::info("other", 3, 1, "third"),
+  ]
+  assert_eq(diagnostics_by_severity(values, Warning).length(), 1)
+  assert_eq(diagnostics_count_code(values, "same"), 2)
+  assert_eq(diagnostics_summary(values), "errors=1 warnings=1 info=1")
+}

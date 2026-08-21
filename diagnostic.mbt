@@ -106,3 +106,38 @@ pub fn Diagnostic::to_text(self : Diagnostic) -> String {
 pub fn diagnostics_have_errors(values : Array[Diagnostic]) -> Bool {
   values.any(fn(item) { item.severity() == Error })
 }
+
+///|
+/// Return diagnostics with a selected severity while preserving source order.
+pub fn diagnostics_by_severity(
+  values : Array[Diagnostic],
+  severity : Severity,
+) -> Array[Diagnostic] {
+  values.filter(fn(item) { item.severity() == severity })
+}
+
+///|
+/// Count diagnostics with a selected stable code.
+pub fn diagnostics_count_code(values : Array[Diagnostic], code : String) -> Int {
+  let mut count = 0
+  for item in values {
+    if item.code() == code {
+      count += 1
+    }
+  }
+  count
+}
+
+///|
+/// Summarize diagnostic severities for command and editor integrations.
+pub fn diagnostics_summary(values : Array[Diagnostic]) -> String {
+  let errors = diagnostics_by_severity(values, Error).length()
+  let warnings = diagnostics_by_severity(values, Warning).length()
+  let infos = diagnostics_by_severity(values, Info).length()
+  "errors=" +
+  errors.to_string() +
+  " warnings=" +
+  warnings.to_string() +
+  " info=" +
+  infos.to_string()
+}
