@@ -216,3 +216,21 @@ pub fn explain_program(program : Program) -> String {
   }
   result
 }
+
+///|
+/// Render modal before/after state for every executed source block.
+pub fn execution_trace_text(execution : Execution) -> String {
+  let mut result = "TRACE"
+  for step in execution.steps() {
+    result += "\nline " + step.source_line().to_string()
+    result += " " + step.before().position().to_text()
+    result += " -> " + step.after().position().to_text()
+    result += " mode=" + step.after().motion().to_text()
+    result += " units=" + step.after().units().to_text()
+    result += " segments=" + step.segments().length().to_string()
+    for diagnostic in step.diagnostics() {
+      result += "\n  " + diagnostic.to_text()
+    }
+  }
+  result
+}

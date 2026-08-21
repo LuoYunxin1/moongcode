@@ -135,6 +135,14 @@ test "explain line returns parse diagnostics" {
 }
 
 ///|
+test "execution trace reports units mode positions and diagnostics" {
+  let trace = execution_trace_text(interpret_source("G20 G91 F1\nG1 X1\n"))
+  assert_true(trace.has_prefix("TRACE\nline 1"))
+  assert_true(trace.contains("units=inch"))
+  assert_true(trace.contains("(0,0,0) -> (25.4,0,0)"))
+}
+
+///|
 test "explain line rejects blank lines" {
   let result = explain_line("\nG1", line_number=1)
   match result {

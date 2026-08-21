@@ -26,24 +26,6 @@ fn read_source(path : String) -> Result[String, String] {
 }
 
 ///|
-fn trace_text(execution : @lib.Execution) -> String {
-  let mut result = "TRACE"
-  for step in execution.steps() {
-    result += "\nline " + step.source_line().to_string()
-    result += " " +
-      step.before().position().to_text() +
-      " -> " +
-      step.after().position().to_text()
-    result += " mode=" + step.after().motion().to_text()
-    result += " segments=" + step.segments().length().to_string()
-    for diagnostic in step.diagnostics() {
-      result += "\n  " + diagnostic.to_text()
-    }
-  }
-  result
-}
-
-///|
 fn stats_text(execution : @lib.Execution) -> String {
   let stats = @lib.analyze_execution(execution)
   "segments=" +
@@ -118,7 +100,7 @@ fn main {
   }
   let execution = @lib.execute_program(program)
   match command {
-    "trace" => println(trace_text(execution))
+    "trace" => println(@lib.execution_trace_text(execution))
     "analyze" => println(stats_text(execution))
     "audit" => {
       let report = @lib.audit_execution(
@@ -154,7 +136,7 @@ fn main {
       println("=== normalize ===")
       println(@lib.normalize_program(program, preserve_comments=true))
       println("=== trace ===")
-      println(trace_text(execution))
+      println(@lib.execution_trace_text(execution))
       println("=== analyze ===")
       println(stats_text(execution))
       println("=== audit ===")
