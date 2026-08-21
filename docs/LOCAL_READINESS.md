@@ -14,4 +14,6 @@ Date: 2026-08-21
 - Native tests/build: deferred to GitHub Actions because this Windows host has no C compiler (`cl`, `cc`, `gcc`, and `clang` unavailable).
 - CLI demo, safe fixture audit, unsafe fixture rejection, normalization, trace, and statistics: passed locally.
 - Submission draft: `C:\Users\42673\Desktop\工作区\随用随清\moongcode-application.md`, strict validator passed.
-- GitHub repository and CI run: pending remote creation after the local gate.
+- GitHub repository: public `https://github.com/LuoYunxin1/moongcode`, default branch `main`.
+- GitHub Actions: portable and native jobs passed at the initial delivery commit; the documentation-only delivery audit is rechecked by CI.
+- Release: `v0.1.0` was published from the initial tested commit; the final audit update is released as `v0.1.1`.
