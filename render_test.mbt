@@ -92,6 +92,8 @@ test "normalize block has explicit checksum retention" {
 test "validate report marks valid program" {
   let report = validate_report(parse_program("G1 X2"))
   assert_true(report.has_prefix("VALID\nblocks: 1"))
+  assert_true(report.contains("words: 2"))
+  assert_true(report.contains("errors=0 warnings=0 info=0"))
   assert_true(!report.contains("diagnostics:"))
 }
 

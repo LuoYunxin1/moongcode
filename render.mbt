@@ -131,6 +131,10 @@ pub fn validate_report(program : Program) -> String {
     "VALID"
   }
   let mut result = header + "\nblocks: " + program.blocks().length().to_string()
+  result += "\nwords: " + program.word_count().to_string()
+  result += "\ncomments: " + program.comment_count().to_string()
+  result += "\nchecksums: " + program.checksum_count().to_string()
+  result += "\n" + diagnostics_summary(diagnostics)
   if !diagnostics.is_empty() {
     result += "\ndiagnostics:\n" + render_diagnostic_lines(diagnostics)
   }
