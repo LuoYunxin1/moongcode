@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portable:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Resolve dependencies
+        run: moon update
+      - name: Format and strict checks
+        run: |
+          moon fmt --check
+          moon check --target wasm-gc --deny-warn
+          moon check --target wasm --deny-warn
+          moon check --target js --deny-warn
+      - name: Portable tests
+        run: |
+          moon test --target wasm-gc
+          moon test --target wasm
+          moon test --target js
+      - name: JavaScript CLI acceptance
+        run: |
+          moon run cmd/main --target js -- demo | tee demo.txt
+          grep -q '^=== audit ===$' demo.txt
+          grep -q '^PASS$' demo.txt
+          moon run cmd/main --target js -- audit examples/safe.nc | tee audit.txt
+          grep -q '^PASS$' audit.txt
+          moon run cmd/main --target js -- audit examples/unsafe.nc > unsafe.txt || test "$?" -eq 1
+          grep -q '^FAIL$' unsafe.txt
+
+  native:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Resolve dependencies
+        run: moon update
+      - name: Native verification
+        run: |
+          moon check --target native --deny-warn
+          moon test --target native
+          moon build cmd/main --target native --release
+          moon run cmd/main --target native -- demo | grep -q '^PASS$'

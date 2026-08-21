@@ -1,0 +1,10 @@
+; A small bounded milling path
+G21 G90 F300
+T1 M3 S12000
+G0 X10 Y10 Z5
+G1 Z0
+G1 X40 Y10
+G1 X40 Y40
+G1 X10 Y40
+G1 X10 Y10
+M5 M30

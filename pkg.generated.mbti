@@ -1,0 +1,474 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "LuoYunxin1/moongcode"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub const GEOMETRY_MIN_RADIUS : Double = 1.0e-9
+
+pub const GEOMETRY_TOLERANCE : Double = 1.0e-7
+
+pub fn analyze_execution(Execution) -> ToolpathStats
+
+pub fn audit_execution(Execution, MachineProfile) -> SafetyReport
+
+pub fn bounds_of_arc(ArcGeometry) -> Bounds3
+
+pub fn bounds_of_segment(Segment, plane? : Plane) -> Bounds3
+
+pub fn canonical_block(Block, preserve_comment? : Bool) -> String
+
+pub fn convert_distance(Double, Units, Units) -> Result[Double, Diagnostic]
+
+pub fn diagnostics_have_errors(Array[Diagnostic]) -> Bool
+
+pub fn distance(Point3, Point3) -> Double
+
+pub fn distance3(Point3, Point3) -> Double
+
+pub fn execute_program(Program, initial_state? : MachineState, rapid_feed_mm_min? : Double, allow_unsupported? : Bool) -> Execution
+
+pub fn explain_block(Block) -> String
+
+pub fn explain_line(String, line_number? : Int) -> Result[String, Array[Diagnostic]]
+
+pub fn explain_program(Program) -> String
+
+pub fn interpret_source(String, rapid_feed_mm_min? : Double, allow_unsupported? : Bool) -> Execution
+
+pub fn merge_bounds(Bounds3, Bounds3) -> Bounds3
+
+pub fn merge_segment_and_arc(Segment, ArcGeometry, plane? : Plane) -> Bounds3
+
+pub fn normalize_block(Block, preserve_comment? : Bool) -> String
+
+pub fn normalize_program(Program, preserve_comments? : Bool) -> String
+
+pub fn parse_bounded_int(String, Int, Int, String, Int) -> Result[Int, Diagnostic]
+
+pub fn parse_finite_double(String, String, Int, Int) -> Result[Double, Diagnostic]
+
+pub fn parse_profile(String) -> Result[MachineProfile, Array[Diagnostic]]
+
+pub fn parse_program(String) -> Program
+
+pub fn plane_lift(Plane, PlanePoint) -> Point3
+
+pub fn plane_project(Plane, Point3) -> PlanePoint
+
+pub fn resolve_target_point(Point3, Double?, Double?, Double?, Units, DistanceMode) -> Result[Point3, Diagnostic]
+
+pub fn safety_report_text(SafetyReport) -> String
+
+pub fn scale_distance_mm(Double, Units) -> Result[Double, Diagnostic]
+
+pub fn segment_bounds(Segment, plane? : Plane) -> Bounds3
+
+pub fn solve_arc(Point3, Point3, ArcSpec) -> Result[ArcGeometry, Diagnostic]
+
+pub fn solve_arc_ijk(Point3, Point3, Plane, Bool, Point3, tolerance? : Double) -> Result[ArcGeometry, Diagnostic]
+
+pub fn solve_arc_radius(Point3, Point3, Plane, Bool, Double, tolerance? : Double) -> Result[ArcGeometry, Diagnostic]
+
+pub fn solve_arc_with_ijk(Point3, Point3, Plane, Bool, Point3, tolerance? : Double) -> Result[ArcGeometry, Diagnostic]
+
+pub fn solve_arc_with_radius(Point3, Point3, Plane, Bool, Double, tolerance? : Double) -> Result[ArcGeometry, Diagnostic]
+
+pub fn split_ascii_fields(String) -> Array[String]
+
+pub fn target_point(Point3, Double?, Double?, Double?, Units, DistanceMode) -> Result[Point3, Diagnostic]
+
+pub fn validate_report(Program) -> String
+
+// Errors
+
+// Types and methods
+pub(all) enum ArcDirection {
+  Clockwise
+  CounterClockwise
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ArcDistanceMode {
+  ArcIncremental
+  ArcAbsolute
+} derive(Eq, @debug.Debug)
+
+pub struct ArcGeometry {
+  start : Point3
+  end : Point3
+  plane : Plane
+  clockwise : Bool
+  center : Point3
+  radius : Double
+  sweep : Double
+  length : Double
+  bounds : Bounds3
+  axis_delta : Double
+} derive(Eq, @debug.Debug)
+pub fn ArcGeometry::axis_delta(Self) -> Double
+pub fn ArcGeometry::bounds(Self) -> Bounds3
+pub fn ArcGeometry::center(Self) -> Point3
+pub fn ArcGeometry::clockwise(Self) -> Bool
+pub fn ArcGeometry::end(Self) -> Point3
+pub fn ArcGeometry::from_ijk(Point3, Point3, Plane, Bool, Point3, tolerance? : Double) -> Result[Self, Diagnostic]
+pub fn ArcGeometry::from_radius(Point3, Point3, Plane, Bool, Double, tolerance? : Double) -> Result[Self, Diagnostic]
+pub fn ArcGeometry::length(Self) -> Double
+pub fn ArcGeometry::length_mm(Self) -> Double
+pub fn ArcGeometry::plane(Self) -> Plane
+pub fn ArcGeometry::radius(Self) -> Double
+pub fn ArcGeometry::radius_mm(Self) -> Double
+pub fn ArcGeometry::start(Self) -> Point3
+pub fn ArcGeometry::sweep(Self) -> Double
+pub fn ArcGeometry::sweep_radians(Self) -> Double
+
+pub struct ArcSpec {
+  plane : Plane
+  clockwise : Bool
+  center_offset : Point3?
+  radius : Double?
+  tolerance : Double
+} derive(Eq, @debug.Debug)
+pub fn ArcSpec::center_offset(Self) -> Point3?
+pub fn ArcSpec::clockwise(Self) -> Bool
+pub fn ArcSpec::ijk(Plane, Bool, Point3, tolerance? : Double) -> Self
+pub fn ArcSpec::plane(Self) -> Plane
+pub fn ArcSpec::radius(Plane, Bool, Double, tolerance? : Double) -> Self
+pub fn ArcSpec::radius_value(Self) -> Double?
+pub fn ArcSpec::tolerance(Self) -> Double
+
+pub struct AxisLimits {
+  minimum_mm : Double
+  maximum_mm : Double
+} derive(Eq, @debug.Debug)
+pub fn AxisLimits::contains(Self, Double) -> Bool
+pub fn AxisLimits::maximum_mm(Self) -> Double
+pub fn AxisLimits::minimum_mm(Self) -> Double
+pub fn AxisLimits::new(Double, Double) -> Result[Self, String]
+pub fn AxisLimits::span_mm(Self) -> Double
+
+pub struct Block {
+  source_line : Int
+  sequence : Int?
+  words : Array[Word]
+  comment : String?
+  checksum : Int?
+  raw : String
+} derive(Eq, @debug.Debug)
+pub fn Block::checksum(Self) -> Int?
+pub fn Block::comment(Self) -> String?
+pub fn Block::first_value(Self, Char) -> Double?
+pub fn Block::is_empty(Self) -> Bool
+pub fn Block::new(Int, Int?, Array[Word], String?, Int?, String) -> Self
+pub fn Block::raw(Self) -> String
+pub fn Block::sequence(Self) -> Int?
+pub fn Block::source_line(Self) -> Int
+pub fn Block::values(Self, Char) -> Array[Double]
+pub fn Block::words(Self) -> Array[Word]
+
+#alias(Bounds)
+pub struct Bounds3 {
+  min : Point3
+  max : Point3
+} derive(Eq, @debug.Debug)
+pub fn Bounds3::contains(Self, Point3, tolerance? : Double) -> Bool
+pub fn Bounds3::from_point(Point3) -> Self
+pub fn Bounds3::from_points(Point3, Point3) -> Self
+pub fn Bounds3::include_point(Self, Point3) -> Self
+pub fn Bounds3::max(Self) -> Point3
+pub fn Bounds3::merge(Self, Self) -> Self
+pub fn Bounds3::min(Self) -> Point3
+
+pub struct Diagnostic {
+  severity : Severity
+  code : String
+  line : Int
+  column : Int
+  message : String
+} derive(Eq, @debug.Debug)
+pub fn Diagnostic::code(Self) -> String
+pub fn Diagnostic::column(Self) -> Int
+pub fn Diagnostic::error(String, Int, Int, String) -> Self
+pub fn Diagnostic::info(String, Int, Int, String) -> Self
+pub fn Diagnostic::line(Self) -> Int
+pub fn Diagnostic::message(Self) -> String
+pub fn Diagnostic::new(Severity, String, Int, Int, String) -> Self
+pub fn Diagnostic::severity(Self) -> Severity
+pub fn Diagnostic::to_text(Self) -> String
+pub fn Diagnostic::warning(String, Int, Int, String) -> Self
+
+pub(all) enum DistanceMode {
+  Absolute
+  Incremental
+} derive(Eq, @debug.Debug)
+pub fn DistanceMode::to_text(Self) -> String
+
+pub struct Execution {
+  program : Program
+  steps : Array[TraceStep]
+  segments : Array[Segment]
+  diagnostics : Array[Diagnostic]
+  final_state : MachineState
+} derive(Eq, @debug.Debug)
+pub fn Execution::diagnostics(Self) -> Array[Diagnostic]
+pub fn Execution::final_state(Self) -> MachineState
+pub fn Execution::is_valid(Self) -> Bool
+pub fn Execution::new(Program, Array[TraceStep], Array[Segment], Array[Diagnostic], MachineState) -> Self
+pub fn Execution::program(Self) -> Program
+pub fn Execution::segments(Self) -> Array[Segment]
+pub fn Execution::steps(Self) -> Array[TraceStep]
+
+pub struct GeometryBounds {
+  bounds : Bounds3?
+  count : Int
+} derive(Eq, @debug.Debug)
+pub fn GeometryBounds::add_arc(Self, ArcGeometry) -> Self
+pub fn GeometryBounds::add_bounds(Self, Bounds3) -> Self
+pub fn GeometryBounds::add_segment(Self, Segment, plane? : Plane) -> Self
+pub fn GeometryBounds::bounds(Self) -> Bounds3?
+pub fn GeometryBounds::count(Self) -> Int
+pub fn GeometryBounds::empty() -> Self
+pub fn GeometryBounds::merge(Self, Self) -> Self
+pub fn GeometryBounds::value(Self) -> Bounds3?
+
+pub struct MachineProfile {
+  name : String
+  x : AxisLimits
+  y : AxisLimits
+  z : AxisLimits
+  max_feed_mm_min : Double
+  rapid_feed_mm_min : Double
+  max_spindle_rpm : Double
+  max_arc_radius_mm : Double
+  max_dwell_seconds : Double
+  require_spindle_for_cut : Bool
+  allow_rapid_z_down : Bool
+  allow_unsupported : Bool
+  allowed_tools : Array[Int]
+} derive(Eq, @debug.Debug)
+pub fn MachineProfile::allow_rapid_z_down(Self) -> Bool
+pub fn MachineProfile::allow_unsupported(Self) -> Bool
+pub fn MachineProfile::allowed_tools(Self) -> Array[Int]
+pub fn MachineProfile::allows_tool(Self, Int) -> Bool
+pub fn MachineProfile::desktop_mill() -> Self
+pub fn MachineProfile::max_arc_radius_mm(Self) -> Double
+pub fn MachineProfile::max_dwell_seconds(Self) -> Double
+pub fn MachineProfile::max_feed_mm_min(Self) -> Double
+pub fn MachineProfile::max_spindle_rpm(Self) -> Double
+pub fn MachineProfile::name(Self) -> String
+pub fn MachineProfile::new(String, AxisLimits, AxisLimits, AxisLimits, Double, Double, Double, Double, Double, Bool, Bool, Bool, Array[Int]) -> Result[Self, String]
+pub fn MachineProfile::rapid_feed_mm_min(Self) -> Double
+pub fn MachineProfile::require_spindle_for_cut(Self) -> Bool
+pub fn MachineProfile::to_text(Self) -> String
+pub fn MachineProfile::x(Self) -> AxisLimits
+pub fn MachineProfile::y(Self) -> AxisLimits
+pub fn MachineProfile::z(Self) -> AxisLimits
+
+pub struct MachineState {
+  position : Point3
+  units : Units
+  distance_mode : DistanceMode
+  arc_distance_mode : ArcDistanceMode
+  plane : Plane
+  motion : MotionMode
+  feed_mm_min : Double
+  spindle_rpm : Double
+  spindle : SpindleMode
+  tool : Int
+  status : ProgramStatus
+  elapsed_seconds : Double
+} derive(Eq, @debug.Debug)
+pub fn MachineState::arc_distance_mode(Self) -> ArcDistanceMode
+pub fn MachineState::distance_mode(Self) -> DistanceMode
+pub fn MachineState::elapsed_seconds(Self) -> Double
+pub fn MachineState::feed_mm_min(Self) -> Double
+pub fn MachineState::initial() -> Self
+pub fn MachineState::motion(Self) -> MotionMode
+pub fn MachineState::plane(Self) -> Plane
+pub fn MachineState::position(Self) -> Point3
+pub fn MachineState::replace(Self, position? : Point3, units? : Units, distance_mode? : DistanceMode, arc_distance_mode? : ArcDistanceMode, plane? : Plane, motion? : MotionMode, feed_mm_min? : Double, spindle_rpm? : Double, spindle? : SpindleMode, tool? : Int, status? : ProgramStatus, elapsed_seconds? : Double) -> Self
+pub fn MachineState::spindle(Self) -> SpindleMode
+pub fn MachineState::spindle_rpm(Self) -> Double
+pub fn MachineState::status(Self) -> ProgramStatus
+pub fn MachineState::tool(Self) -> Int
+pub fn MachineState::units(Self) -> Units
+
+pub(all) enum MotionMode {
+  NoMotion
+  RapidMotion
+  LinearMotion
+  ClockwiseArc
+  CounterClockwiseArc
+} derive(Eq, @debug.Debug)
+pub fn MotionMode::to_text(Self) -> String
+
+pub(all) enum Plane {
+  XY
+  ZX
+  YZ
+} derive(Eq, @debug.Debug)
+pub fn Plane::lift(Self, PlanePoint) -> Point3
+pub fn Plane::project(Self, Point3) -> PlanePoint
+pub fn Plane::to_text(Self) -> String
+
+pub struct PlanePoint {
+  u : Double
+  v : Double
+  axis : Double
+} derive(Eq, @debug.Debug)
+pub fn PlanePoint::axis(Self) -> Double
+pub fn PlanePoint::first(Self) -> Double
+pub fn PlanePoint::new(Double, Double, Double) -> Self
+pub fn PlanePoint::second(Self) -> Double
+pub fn PlanePoint::u(Self) -> Double
+pub fn PlanePoint::v(Self) -> Double
+
+pub struct Point3 {
+  x : Double
+  y : Double
+  z : Double
+} derive(Eq, @debug.Debug)
+pub fn Point3::distance_to(Self, Self) -> Double
+pub fn Point3::new(Double, Double, Double) -> Self
+pub fn Point3::origin() -> Self
+pub fn Point3::to_text(Self) -> String
+pub fn Point3::with_x(Self, Double) -> Self
+pub fn Point3::with_y(Self, Double) -> Self
+pub fn Point3::with_z(Self, Double) -> Self
+pub fn Point3::x(Self) -> Double
+pub fn Point3::y(Self) -> Double
+pub fn Point3::z(Self) -> Double
+
+pub struct Program {
+  blocks : Array[Block]
+  diagnostics : Array[Diagnostic]
+} derive(Eq, @debug.Debug)
+pub fn Program::blocks(Self) -> Array[Block]
+pub fn Program::diagnostics(Self) -> Array[Diagnostic]
+pub fn Program::is_valid(Self) -> Bool
+pub fn Program::new(Array[Block], Array[Diagnostic]) -> Self
+
+pub(all) enum ProgramStatus {
+  Ready
+  Paused
+  Ended
+} derive(Eq, @debug.Debug)
+
+pub struct SafetyReport {
+  stats : ToolpathStats
+  findings : Array[Diagnostic]
+} derive(Eq, @debug.Debug)
+pub fn SafetyReport::findings(Self) -> Array[Diagnostic]
+pub fn SafetyReport::passed(Self) -> Bool
+pub fn SafetyReport::stats(Self) -> ToolpathStats
+
+pub struct Segment {
+  kind : SegmentKind
+  source_line : Int
+  start : Point3
+  end : Point3
+  center : Point3?
+  radius_mm : Double
+  sweep_radians : Double
+  length_mm : Double
+  duration_seconds : Double
+  feed_mm_min : Double
+} derive(Eq, @debug.Debug)
+pub fn Segment::center(Self) -> Point3?
+pub fn Segment::duration_seconds(Self) -> Double
+pub fn Segment::end(Self) -> Point3
+pub fn Segment::feed_mm_min(Self) -> Double
+pub fn Segment::kind(Self) -> SegmentKind
+pub fn Segment::length_mm(Self) -> Double
+pub fn Segment::new(SegmentKind, Int, Point3, Point3, Point3?, Double, Double, Double, Double, Double) -> Self
+pub fn Segment::radius_mm(Self) -> Double
+pub fn Segment::source_line(Self) -> Int
+pub fn Segment::start(Self) -> Point3
+pub fn Segment::sweep_radians(Self) -> Double
+
+pub(all) enum SegmentKind {
+  RapidSegment
+  LinearSegment
+  ClockwiseArcSegment
+  CounterClockwiseArcSegment
+  DwellSegment
+} derive(Eq, @debug.Debug)
+pub fn SegmentKind::to_text(Self) -> String
+
+pub(all) enum Severity {
+  Info
+  Warning
+  Error
+} derive(Eq, @debug.Debug)
+pub fn Severity::to_text(Self) -> String
+
+pub(all) enum SpindleMode {
+  SpindleOff
+  SpindleClockwise
+  SpindleCounterClockwise
+} derive(Eq, @debug.Debug)
+pub fn SpindleMode::to_text(Self) -> String
+
+pub struct ToolpathStats {
+  segment_count : Int
+  rapid_count : Int
+  cutting_count : Int
+  dwell_count : Int
+  rapid_distance_mm : Double
+  cutting_distance_mm : Double
+  arc_distance_mm : Double
+  total_distance_mm : Double
+  estimated_seconds : Double
+  bounds : Bounds3?
+} derive(Eq, @debug.Debug)
+pub fn ToolpathStats::arc_distance_mm(Self) -> Double
+pub fn ToolpathStats::bounds(Self) -> Bounds3?
+pub fn ToolpathStats::cutting_count(Self) -> Int
+pub fn ToolpathStats::cutting_distance_mm(Self) -> Double
+pub fn ToolpathStats::dwell_count(Self) -> Int
+pub fn ToolpathStats::estimated_seconds(Self) -> Double
+pub fn ToolpathStats::rapid_count(Self) -> Int
+pub fn ToolpathStats::rapid_distance_mm(Self) -> Double
+pub fn ToolpathStats::segment_count(Self) -> Int
+pub fn ToolpathStats::total_distance_mm(Self) -> Double
+
+pub struct TraceStep {
+  source_line : Int
+  block : Block
+  before : MachineState
+  after : MachineState
+  segments : Array[Segment]
+  diagnostics : Array[Diagnostic]
+} derive(Eq, @debug.Debug)
+pub fn TraceStep::after(Self) -> MachineState
+pub fn TraceStep::before(Self) -> MachineState
+pub fn TraceStep::block(Self) -> Block
+pub fn TraceStep::diagnostics(Self) -> Array[Diagnostic]
+pub fn TraceStep::new(Int, Block, MachineState, MachineState, Array[Segment], Array[Diagnostic]) -> Self
+pub fn TraceStep::segments(Self) -> Array[Segment]
+pub fn TraceStep::source_line(Self) -> Int
+
+pub(all) enum Units {
+  Millimeters
+  Inches
+} derive(Eq, @debug.Debug)
+pub fn Units::scale_to_mm(Self) -> Double
+pub fn Units::to_text(Self) -> String
+
+pub struct Word {
+  letter : Char
+  value : Double
+  raw : String
+  column : Int
+} derive(Eq, @debug.Debug)
+pub fn Word::column(Self) -> Int
+pub fn Word::letter(Self) -> Char
+pub fn Word::new(Char, Double, String, Int) -> Self
+pub fn Word::raw(Self) -> String
+pub fn Word::value(Self) -> Double
+
+// Type aliases
+
+// Traits
+
