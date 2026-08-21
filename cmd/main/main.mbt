@@ -14,7 +14,7 @@ fn demo_source() -> String {
 fn usage() -> String {
   "MoonGCode - deterministic G-code replay and safety preflight\n" +
   "usage: moon run cmd/main -- <command> [file]\n\n" +
-  "commands: demo, validate, normalize, trace, analyze, audit, audit-laser, audit-md, explain\n" +
+  "commands: demo, validate, normalize, trace, analyze, audit, audit-laser, audit-profile, audit-md, explain\n" +
   "file is UTF-8 G-code; demo uses a built-in program"
 }
 
@@ -47,7 +47,7 @@ fn main {
   let raw = @env.args()
   let commands = [
     "demo", "validate", "normalize", "trace", "analyze", "audit", "audit-laser",
-    "audit-md", "explain", "help", "--help", "-h",
+    "audit-profile", "audit-md", "explain", "help", "--help", "-h",
   ]
   let mut command_index = raw.length()
   for index, value in raw {
@@ -117,6 +117,36 @@ fn main {
         execution,
         @lib.MachineProfile::desktop_laser(),
       )
+      println(@lib.safety_report_text(report))
+      if !report.passed() {
+        @sys.exit(1)
+      }
+    }
+    "audit-profile" => {
+      if args.length() < 3 {
+        println("cli.profile.required: provide G-code and profile files")
+        @sys.exit(2)
+        return
+      }
+      let profile_source = match read_source(args[2]) {
+        Ok(value) => value
+        Err(message) => {
+          println("io.profile.failed: " + message)
+          @sys.exit(2)
+          return
+        }
+      }
+      let profile = match @lib.parse_profile(profile_source) {
+        Ok(value) => value
+        Err(diagnostics) => {
+          for diagnostic in diagnostics {
+            println(diagnostic.to_text())
+          }
+          @sys.exit(2)
+          return
+        }
+      }
+      let report = @lib.audit_execution(execution, profile)
       println(@lib.safety_report_text(report))
       if !report.passed() {
         @sys.exit(1)

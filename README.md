@@ -21,6 +21,7 @@ moon run cmd/main -- trace examples/safe.nc
 moon run cmd/main -- analyze examples/safe.nc
 moon run cmd/main -- audit examples/safe.nc
 moon run cmd/main -- audit-laser examples/laser.nc
+moon run cmd/main -- audit-profile examples/safe.nc examples/desktop-mill.profile
 moon run cmd/main -- audit-md examples/safe.nc
 moon run cmd/main -- explain examples/safe.nc
 ```
