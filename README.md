@@ -10,6 +10,7 @@ Install the MoonBit toolchain, then run the built-in acceptance example:
 
 ```text
 moon run cmd/main -- demo
+moon run cmd/main -- profiles
 ```
 
 Analyze a file with the same commands:
