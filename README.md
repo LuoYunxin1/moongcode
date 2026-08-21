@@ -20,6 +20,7 @@ moon run cmd/main -- normalize examples/safe.nc
 moon run cmd/main -- trace examples/safe.nc
 moon run cmd/main -- analyze examples/safe.nc
 moon run cmd/main -- audit examples/safe.nc
+moon run cmd/main -- audit-md examples/safe.nc
 moon run cmd/main -- explain examples/safe.nc
 ```
 

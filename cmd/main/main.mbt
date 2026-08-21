@@ -14,7 +14,7 @@ fn demo_source() -> String {
 fn usage() -> String {
   "MoonGCode - deterministic G-code replay and safety preflight\n" +
   "usage: moon run cmd/main -- <command> [file]\n\n" +
-  "commands: demo, validate, normalize, trace, analyze, audit, explain\n" +
+  "commands: demo, validate, normalize, trace, analyze, audit, audit-md, explain\n" +
   "file is UTF-8 G-code; demo uses a built-in program"
 }
 
@@ -64,8 +64,8 @@ fn stats_text(execution : @lib.Execution) -> String {
 fn main {
   let raw = @env.args()
   let commands = [
-    "demo", "validate", "normalize", "trace", "analyze", "audit", "explain", "help",
-    "--help", "-h",
+    "demo", "validate", "normalize", "trace", "analyze", "audit", "audit-md", "explain",
+    "help", "--help", "-h",
   ]
   let mut command_index = raw.length()
   for index, value in raw {
@@ -126,6 +126,16 @@ fn main {
         @lib.MachineProfile::desktop_mill(),
       )
       println(@lib.safety_report_text(report))
+      if !report.passed() {
+        @sys.exit(1)
+      }
+    }
+    "audit-md" => {
+      let report = @lib.audit_execution(
+        execution,
+        @lib.MachineProfile::desktop_mill(),
+      )
+      println(@lib.safety_report_markdown(report))
       if !report.passed() {
         @sys.exit(1)
       }
