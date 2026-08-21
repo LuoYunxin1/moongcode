@@ -43,6 +43,17 @@ test "desktop profile has bounded workspace" {
 }
 
 ///|
+test "desktop laser preset has bounded power and workspace" {
+  let profile = MachineProfile::desktop_laser()
+  assert_eq(profile.name(), "desktop-laser")
+  assert_true(profile.x().contains(400.0))
+  assert_false(profile.z().contains(-0.1))
+  assert_eq(profile.max_spindle_rpm(), 1000.0)
+  assert_true(profile.allows_tool(0))
+  assert_false(profile.allows_tool(1))
+}
+
+///|
 test "axis limits reject reverse range" {
   assert_true(AxisLimits::new(1.0, 1.0) is Err(_))
   assert_true(AxisLimits::new(2.0, -2.0) is Err(_))

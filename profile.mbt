@@ -149,6 +149,26 @@ pub fn MachineProfile::desktop_mill() -> MachineProfile {
 }
 
 ///|
+/// Conservative profile for a small diode-laser engraver.
+pub fn MachineProfile::desktop_laser() -> MachineProfile {
+  MachineProfile::new(
+    "desktop-laser",
+    AxisLimits::new(0.0, 400.0).unwrap(),
+    AxisLimits::new(0.0, 400.0).unwrap(),
+    AxisLimits::new(0.0, 20.0).unwrap(),
+    6000.0,
+    10000.0,
+    1000.0,
+    1000.0,
+    5.0,
+    true,
+    false,
+    false,
+    [0],
+  ).unwrap()
+}
+
+///|
 pub fn MachineProfile::name(self : MachineProfile) -> String {
   self.name
 }
