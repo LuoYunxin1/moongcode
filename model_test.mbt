@@ -39,3 +39,24 @@ test "diagnostic queries preserve severity and code" {
   assert_eq(diagnostics_count_code(values, "same"), 2)
   assert_eq(diagnostics_summary(values), "errors=1 warnings=1 info=1")
 }
+
+///|
+test "program structural counts support parser telemetry" {
+  let program = Program::new(
+    [
+      Block::new(
+        1,
+        None,
+        [Word::new('G', 1.0, "G1", 1)],
+        Some("cut"),
+        None,
+        "G1",
+      ),
+      Block::new(2, None, [Word::new('X', 1.0, "X1", 1)], None, Some(7), "X1*7"),
+    ],
+    [],
+  )
+  assert_eq(program.word_count(), 2)
+  assert_eq(program.comment_count(), 1)
+  assert_eq(program.checksum_count(), 1)
+}

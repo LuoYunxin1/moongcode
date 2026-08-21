@@ -144,6 +144,37 @@ pub fn Program::is_valid(self : Program) -> Bool {
 }
 
 ///|
+pub fn Program::word_count(self : Program) -> Int {
+  let mut count = 0
+  for block in self.blocks {
+    count += block.words().length()
+  }
+  count
+}
+
+///|
+pub fn Program::comment_count(self : Program) -> Int {
+  let mut count = 0
+  for block in self.blocks {
+    if block.comment() is Some(_) {
+      count += 1
+    }
+  }
+  count
+}
+
+///|
+pub fn Program::checksum_count(self : Program) -> Int {
+  let mut count = 0
+  for block in self.blocks {
+    if block.checksum() is Some(_) {
+      count += 1
+    }
+  }
+  count
+}
+
+///|
 pub(all) enum Units {
   Millimeters
   Inches
