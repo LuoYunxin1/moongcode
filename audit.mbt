@@ -292,6 +292,13 @@ pub fn audit_execution(
     }
   }
   let final_state = execution.final_state()
+  if execution.segments().is_empty() {
+    findings.push(
+      Diagnostic::warning(
+        "audit.program.empty", 0, 0, "program produces no motion or dwell segments",
+      ),
+    )
+  }
   if final_state.status() != Ended {
     findings.push(
       Diagnostic::error(

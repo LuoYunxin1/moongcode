@@ -92,6 +92,14 @@ test "unended and unclosed programs are rejected" {
 test "report text is deterministic" {
   let text = safety_report_text(audited("M30\n"))
   assert_true(text.has_prefix("PASS\nsegments=0"))
+  assert_true(text.contains("warning[audit.program.empty]"))
+}
+
+///|
+test "empty completed program is a warning rather than an error" {
+  let report = audited("M30\n")
+  assert_true(report.passed())
+  assert_eq(diagnostics_count_code(report.findings(), "audit.program.empty"), 1)
 }
 
 ///|
