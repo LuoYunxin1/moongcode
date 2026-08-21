@@ -234,3 +234,31 @@ pub fn execution_trace_text(execution : Execution) -> String {
   }
   result
 }
+
+///|
+/// Explain the executed state transition for one physical source line.
+pub fn explain_trace_line(
+  execution : Execution,
+  line : Int,
+) -> Result[String, Diagnostic] {
+  if line < 1 {
+    return Err(
+      Diagnostic::error("render.trace.range", line, 1, "line must be positive"),
+    )
+  }
+  for step in execution.steps() {
+    if step.source_line() == line {
+      let mut result = "line " + line.to_string()
+      result += " position " + step.before().position().to_text()
+      result += " -> " + step.after().position().to_text()
+      result += " motion=" + step.after().motion().to_text()
+      result += " feed=" + step.after().feed_mm_min().to_string()
+      result += " spindle=" + step.after().spindle().to_text()
+      result += " segments=" + step.segments().length().to_string()
+      return Ok(result)
+    }
+  }
+  Err(
+    Diagnostic::error("render.trace.missing", line, 1, "line was not executed"),
+  )
+}

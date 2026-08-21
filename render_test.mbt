@@ -143,6 +143,15 @@ test "execution trace reports units mode positions and diagnostics" {
 }
 
 ///|
+test "trace line explanation selects executed transition" {
+  let execution = interpret_source("G21 F60 M3 S500\nG1 X2\nM5 M30\n")
+  let explanation = explain_trace_line(execution, 2).unwrap()
+  assert_true(explanation.contains("position (0,0,0) -> (2,0,0)"))
+  assert_true(explanation.contains("motion=G1 feed=60 spindle=clockwise"))
+  assert_true(explain_trace_line(execution, 99) is Err(_))
+}
+
+///|
 test "explain line rejects blank lines" {
   let result = explain_line("\nG1", line_number=1)
   match result {
