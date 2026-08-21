@@ -1,0 +1,9 @@
+; 100 mm square for the desktop-laser preset
+G21 G90 F1200
+T0 M3 S500
+G0 X20 Y20 Z1
+G1 X120 Y20
+G1 X120 Y120
+G1 X20 Y120
+G1 X20 Y20
+M5 M30
