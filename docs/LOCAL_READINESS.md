@@ -15,5 +15,6 @@ Date: 2026-08-21
 - CLI demo, safe fixture audit, unsafe fixture rejection, normalization, trace, and statistics: passed locally.
 - Submission draft: `C:\Users\42673\Desktop\工作区\随用随清\moongcode-application.md`, strict validator passed.
 - GitHub repository: public `https://github.com/LuoYunxin1/moongcode`, default branch `main`.
-- GitHub Actions: portable and native jobs passed at the initial delivery commit; the documentation-only delivery audit is rechecked by CI.
-- Release: `v0.1.0` was published from the initial tested commit; the final audit update is released as `v0.1.1`.
+- GitHub Actions: portable and native jobs passed for commit `ff4aa202654b2e33e5c7a2520eac2459fc34ace2` in run `32473101812`.
+- Public history: GitHub API reports 21 commits before this final consistency update; all are attributed to `LuoYunxin1`.
+- Release: `v0.2.0` records the 21-commit, 99-test acceptance milestone; the final consistency update is released from its own green commit.
