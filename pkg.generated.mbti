@@ -22,7 +22,13 @@ pub fn canonical_block(Block, preserve_comment? : Bool) -> String
 
 pub fn convert_distance(Double, Units, Units) -> Result[Double, Diagnostic]
 
+pub fn diagnostics_by_severity(Array[Diagnostic], Severity) -> Array[Diagnostic]
+
+pub fn diagnostics_count_code(Array[Diagnostic], String) -> Int
+
 pub fn diagnostics_have_errors(Array[Diagnostic]) -> Bool
+
+pub fn diagnostics_summary(Array[Diagnostic]) -> String
 
 pub fn distance(Point3, Point3) -> Double
 
@@ -30,11 +36,15 @@ pub fn distance3(Point3, Point3) -> Double
 
 pub fn execute_program(Program, initial_state? : MachineState, rapid_feed_mm_min? : Double, allow_unsupported? : Bool) -> Execution
 
+pub fn execution_trace_text(Execution) -> String
+
 pub fn explain_block(Block) -> String
 
 pub fn explain_line(String, line_number? : Int) -> Result[String, Array[Diagnostic]]
 
 pub fn explain_program(Program) -> String
+
+pub fn explain_trace_line(Execution, Int) -> Result[String, Diagnostic]
 
 pub fn interpret_source(String, rapid_feed_mm_min? : Double, allow_unsupported? : Bool) -> Execution
 
@@ -59,6 +69,8 @@ pub fn plane_lift(Plane, PlanePoint) -> Point3
 pub fn plane_project(Plane, Point3) -> PlanePoint
 
 pub fn resolve_target_point(Point3, Double?, Double?, Double?, Units, DistanceMode) -> Result[Point3, Diagnostic]
+
+pub fn safety_report_markdown(SafetyReport) -> String
 
 pub fn safety_report_text(SafetyReport) -> String
 
@@ -251,6 +263,7 @@ pub fn MachineProfile::allow_rapid_z_down(Self) -> Bool
 pub fn MachineProfile::allow_unsupported(Self) -> Bool
 pub fn MachineProfile::allowed_tools(Self) -> Array[Int]
 pub fn MachineProfile::allows_tool(Self, Int) -> Bool
+pub fn MachineProfile::desktop_laser() -> Self
 pub fn MachineProfile::desktop_mill() -> Self
 pub fn MachineProfile::max_arc_radius_mm(Self) -> Double
 pub fn MachineProfile::max_dwell_seconds(Self) -> Double
@@ -345,9 +358,12 @@ pub struct Program {
   diagnostics : Array[Diagnostic]
 } derive(Eq, @debug.Debug)
 pub fn Program::blocks(Self) -> Array[Block]
+pub fn Program::checksum_count(Self) -> Int
+pub fn Program::comment_count(Self) -> Int
 pub fn Program::diagnostics(Self) -> Array[Diagnostic]
 pub fn Program::is_valid(Self) -> Bool
 pub fn Program::new(Array[Block], Array[Diagnostic]) -> Self
+pub fn Program::word_count(Self) -> Int
 
 pub(all) enum ProgramStatus {
   Ready
@@ -359,9 +375,11 @@ pub struct SafetyReport {
   stats : ToolpathStats
   findings : Array[Diagnostic]
 } derive(Eq, @debug.Debug)
+pub fn SafetyReport::error_count(Self) -> Int
 pub fn SafetyReport::findings(Self) -> Array[Diagnostic]
 pub fn SafetyReport::passed(Self) -> Bool
 pub fn SafetyReport::stats(Self) -> ToolpathStats
+pub fn SafetyReport::warning_count(Self) -> Int
 
 pub struct Segment {
   kind : SegmentKind
@@ -431,6 +449,7 @@ pub fn ToolpathStats::estimated_seconds(Self) -> Double
 pub fn ToolpathStats::rapid_count(Self) -> Int
 pub fn ToolpathStats::rapid_distance_mm(Self) -> Double
 pub fn ToolpathStats::segment_count(Self) -> Int
+pub fn ToolpathStats::to_text(Self) -> String
 pub fn ToolpathStats::total_distance_mm(Self) -> Double
 
 pub struct TraceStep {

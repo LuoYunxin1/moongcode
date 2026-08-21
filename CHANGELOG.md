@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0 - 2026-08-21
+
+- Added diagnostic queries, parser telemetry, detailed and Markdown reports.
+- Added laser and external machine-profile audit workflows.
+- Added reusable execution trace explanations and expanded CLI acceptance fixtures.
+- Expanded the verified suite from 90 to 99 focused tests.
+
 ## 0.1.0 - 2026-08-21
 
 - Added strict line-oriented G-code parsing with comments, checksums, canonical rendering, and diagnostics.

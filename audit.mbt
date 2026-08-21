@@ -168,6 +168,16 @@ pub fn SafetyReport::passed(self : SafetyReport) -> Bool {
 }
 
 ///|
+pub fn SafetyReport::error_count(self : SafetyReport) -> Int {
+  diagnostics_by_severity(self.findings, Error).length()
+}
+
+///|
+pub fn SafetyReport::warning_count(self : SafetyReport) -> Int {
+  diagnostics_by_severity(self.findings, Warning).length()
+}
+
+///|
 /// Check a replay against a bounded machine profile. Findings are stable and
 /// line-addressed so CI and operator tooling can explain every rejection.
 pub fn audit_execution(
@@ -323,6 +333,8 @@ pub fn safety_report_text(report : SafetyReport) -> String {
   result += "\nsegments=" + stats.segment_count().to_string()
   result += " distance_mm=" + stats.total_distance_mm().to_string()
   result += " seconds=" + stats.estimated_seconds().to_string()
+  result += " errors=" + report.error_count().to_string()
+  result += " warnings=" + report.warning_count().to_string()
   if !report.findings().is_empty() {
     result += "\nfindings:"
     for finding in report.findings() {

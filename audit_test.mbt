@@ -99,7 +99,17 @@ test "report text is deterministic" {
 test "empty completed program is a warning rather than an error" {
   let report = audited("M30\n")
   assert_true(report.passed())
+  assert_eq(report.error_count(), 0)
+  assert_eq(report.warning_count(), 1)
   assert_eq(diagnostics_count_code(report.findings(), "audit.program.empty"), 1)
+}
+
+///|
+test "safety report counts errors independently from warnings" {
+  let report = audited("G21 F100\nG1 X400\n")
+  assert_true(report.error_count() >= 3)
+  assert_eq(report.warning_count(), 0)
+  assert_false(report.passed())
 }
 
 ///|
