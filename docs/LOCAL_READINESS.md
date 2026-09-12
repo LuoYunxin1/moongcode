@@ -1,4 +1,7 @@
-# Local readiness audit
+# Local readiness audit (historical baseline)
+
+This is the archived August baseline, not the current maintenance verdict.
+See `maintenance/REPORT.md` and `maintenance/CI.md` for the September maintenance evidence.
 
 Date: 2026-08-21
 

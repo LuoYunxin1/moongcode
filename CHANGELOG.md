@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased ¡ª maintenance
+
+- Preserve helical arc spatial length throughout replay and timing.
+- Apply same-block plane changes to statistics and workspace audits.
+- Reject unknown/extra CLI arguments and return nonzero on invalid analysis.
+- Add five regression tests and 470 independent CLI reference fixtures.
+- Add three reproducible maintenance examples and measured baseline evidence.
+
+
 ## 0.2.0 - 2026-08-21
 
 - Added diagnostic queries, parser telemetry, detailed and Markdown reports.
