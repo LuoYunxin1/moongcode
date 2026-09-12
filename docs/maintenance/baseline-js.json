@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "source_revision": "612e5730878cab4ef1c1e44b8df97195ff771444",
+  "oracle_sha256": "cf224ce20435e063d9377ae1529a5d38148067b4b0c46aa7c71f2f63b771d17f",
+  "environment": {
+    "platform": "Windows-10-10.0.26100-SP0",
+    "python": "3.8.5",
+    "moon": "moon 0.1.20260713 (75c7e1f 2026-07-13) ~\\.moon\\bin\\moon.exe\nmoonc v0.10.4+2cc641edf (2026-07-15) ~\\.moon\\bin\\moonc.exe\nmoonrun 0.1.20260713 (75c7e1f 2026-07-13) ~\\.moon\\bin\\moonrun.exe\n\nFeature flags enabled: rr_moon_mod,rr_moon_pkg",
+    "node": "v24.14.0"
+  },
+  "target": "js",
+  "oracle": "Python math.hypot/pi; no external controller execution",
+  "tolerance": {
+    "relative": 1e-12,
+    "absolute": 1e-09
+  },
+  "groups": {
+    "analytic_arcs": {
+      "total": 432,
+      "passed": 144,
+      "failure_samples": [
+        {
+          "case": "G17/G2/G21/G91.1/r=0.25/rise=-0.5/full=False",
+          "detail": {
+            "exit": 0,
+            "actual_arc_mm": 0.39269908169872414,
+            "expected_arc_mm": 0.6357771376567588,
+            "actual_seconds": 0.39519908169872414,
+            "expected_seconds": 0.6382771376567588
+          }
+        },
+        {
+          "case": "G17/G2/G21/G91.1/r=0.25/rise=-0.5/full=True",
+          "detail": {
+            "exit": 0,
+            "actual_arc_mm": 1.5707963267948966,
+            "expected_arc_mm": 1.6484541547378075,
+            "actual_seconds": 1.5732963267948965,
+            "expected_seconds": 1.6509541547378075
+          }
+        },
+        {
+          "case": "G17/G2/G21/G91.1/r=0.25/rise=0.75/full=False",
+          "detail": {
+            "exit": 0,
+            "actual_arc_mm": 0.39269908169872414,
+            "expected_arc_mm": 0.8465887837474704,
+            "actual_seconds": 0.39519908169872414,
+            "expected_seconds": 0.8490887837474703
+          }
+        },
+        {
+          "case": "G17/G2/G21/G91.1/r=0.25/rise=0.75/full=True",
+          "detail": {
+            "exit": 0,
+            "actual_arc_mm": 1.5707963267948966,
+            "expected_arc_mm": 1.7406611101165956,
+            "actual_seconds": 1.5732963267948965,
+            "expected_seconds": 1.7431611101165956
+          }
+        }
+      ],
+      "max_length_abs_error_mm": 461.1519372815262,
+      "max_time_abs_error_seconds": 18.15558808194986,
+      "max_length_relative_error": 0.536139517511181
+    },
+    "workspace_audits": {
+      "total": 24,
+      "passed": 20,
+      "failure_samples": [
+        {
+          "case": "G18/G2/separate=False/limit=4",
+          "detail": {
+            "exit": 0,
+            "bounds_diagnostic": false
+          }
+        },
+        {
+          "case": "G18/G3/separate=False/limit=4",
+          "detail": {
+            "exit": 0,
+            "bounds_diagnostic": false
+          }
+        },
+        {
+          "case": "G19/G2/separate=False/limit=4",
+          "detail": {
+            "exit": 0,
+            "bounds_diagnostic": false
+          }
+        },
+        {
+          "case": "G19/G3/separate=False/limit=4",
+          "detail": {
+            "exit": 0,
+            "bounds_diagnostic": false
+          }
+        }
+      ]
+    },
+    "cli_contracts": {
+      "total": 14,
+      "passed": 5,
+      "failure_samples": [
+        {
+          "case": "unknown",
+          "detail": {
+            "exit": 0,
+            "expected_exit": 2,
+            "stdout": "=== normalize ===\nG21 G90 F600\nM3 S12000 T1\nG0 X10 Y10 Z5\nG1 Z0\nG1 X30 Y10\nG2 X10 Y10 I-10 J0\nG4 P0.5\nM5 M30\n=== trace ===\nTRACE\nline 1 (0,0,0) -> (0,0,0) mode=none units=mm segments=0\nline 2 (0,0,0) -> (0,0,0) mode=none units=mm segments=0\nline 3 (0,0,0) -> (10,10,5) mode=G0 units=mm segments=1\nlin"
+          }
+        },
+        {
+          "case": "unknown before known word",
+          "detail": {
+            "exit": 2,
+            "expected_exit": 2,
+            "stdout": "cli.file.required: provide a G-code file or use demo\n"
+          }
+        },
+        {
+          "case": "extra arguments",
+          "detail": {
+            "exit": 0,
+            "expected_exit": 2,
+            "stdout": "segments=0 rapid=0 cutting=0 dwell=0 distance_mm=0 seconds=0\n"
+          }
+        },
+        {
+          "case": "extra help arguments",
+          "detail": {
+            "exit": 0,
+            "expected_exit": 2,
+            "stdout": "MoonGCode - deterministic G-code replay and safety preflight\nusage: moon run cmd/main -- <command> [file]\n\ncommands: demo, profiles, validate, normalize, trace, analyze, audit, audit-laser, audit-profile, audit-md, explain\nfile is UTF-8 G-code; demo uses a built-in program\n"
+          }
+        }
+      ]
+    }
+  },
+  "passed": false
+}

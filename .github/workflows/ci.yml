@@ -17,6 +17,12 @@ jobs:
         run: |
           curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
           echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: Resolve dependencies
         run: moon update
       - name: Format and strict checks
@@ -43,6 +49,14 @@ jobs:
           grep -q '^PASS$' profile.txt
           moon run cmd/main --target js -- audit examples/unsafe.nc > unsafe.txt || test "$?" -eq 1
           grep -q '^FAIL$' unsafe.txt
+      - name: Independent analytic and CLI oracle
+        run: python scripts/verify_reference.py --target js --output _build/reference-js.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reference-js
+          path: _build/reference-js.json
+          if-no-files-found: warn
 
   native:
     runs-on: ubuntu-latest
@@ -52,6 +66,12 @@ jobs:
         run: |
           curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
           echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: Resolve dependencies
         run: moon update
       - name: Native verification
@@ -60,3 +80,11 @@ jobs:
           moon test --target native
           moon build cmd/main --target native --release
           moon run cmd/main --target native -- demo | grep -q '^PASS$'
+      - name: Native independent analytic and CLI oracle
+        run: python scripts/verify_reference.py --target native --output _build/reference-native.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reference-native
+          path: _build/reference-native.json
+          if-no-files-found: warn
