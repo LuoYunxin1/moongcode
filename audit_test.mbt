@@ -131,3 +131,57 @@ test "markdown report exposes decision metrics and findings" {
   assert_true(markdown.contains("| Segments | 0 |"))
   assert_true(markdown.contains("`audit.program.empty` line 0"))
 }
+
+///|
+test "same-block plane switch has the same envelope as a separate block" {
+  for
+    command in [
+      "G18 G2 X0 Z10 R5", "G18 G3 X0 Z10 R5", "G19 G2 Y0 Z10 R5", "G19 G3 Y0 Z10 R5",
+    ] {
+    let same = interpret_source("G21 F60 M3 S1000\n" + command + "\nM5 M30\n")
+    let split = interpret_source(
+      "G21 F60 M3 S1000\n" +
+      command[0:3].to_owned() +
+      "\n" +
+      command[4:].to_owned() +
+      "\nM5 M30\n",
+    )
+    assert_true(same.is_valid())
+    assert_true(split.is_valid())
+    assert_eq(
+      analyze_execution(same).bounds(),
+      analyze_execution(split).bounds(),
+    )
+    let same_report = audit_execution(same, MachineProfile::desktop_mill())
+    let split_report = audit_execution(split, MachineProfile::desktop_mill())
+    assert_eq(same_report.passed(), split_report.passed())
+  }
+}
+
+///|
+test "same-block G18 full circle detects hidden Z workspace excursion" {
+  let profile = MachineProfile::new(
+    "shallow-z",
+    AxisLimits::new(-100.0, 100.0).unwrap(),
+    AxisLimits::new(-100.0, 100.0).unwrap(),
+    AxisLimits::new(-4.0, 4.0).unwrap(),
+    2400.0,
+    6000.0,
+    24000.0,
+    500.0,
+    30.0,
+    true,
+    false,
+    false,
+    [0],
+  ).unwrap()
+  let execution = interpret_source("G21 F60 M3 S1000\nG18 G2 I5 K0\nM5 M30\n")
+  assert_true(execution.is_valid())
+  let report = audit_execution(execution, profile)
+  assert_false(report.passed())
+  assert_true(
+    report
+    .findings()
+    .any(fn(d) { d.code() == "audit.workspace.bounds" && d.line() == 2 }),
+  )
+}

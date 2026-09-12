@@ -107,7 +107,8 @@ pub fn analyze_execution(execution : Execution) -> ToolpathStats {
   let mut seconds = 0.0
   let mut bounds : Bounds3? = None
   for step in execution.steps() {
-    let plane = step.before().plane()
+    // Modal plane selection applies to motion in the same block.
+    let plane = step.after().plane()
     for segment in step.segments() {
       let length = segment.length_mm()
       let duration = segment.duration_seconds()
@@ -186,7 +187,6 @@ pub fn audit_execution(
 ) -> SafetyReport {
   let findings = execution.diagnostics()
   for step in execution.steps() {
-    let before = step.before()
     let after = step.after()
     if !profile.allows_tool(after.tool()) {
       findings.push(
@@ -209,7 +209,7 @@ pub fn audit_execution(
       )
     }
     for segment in step.segments() {
-      let envelope = segment_bounds(segment, plane=before.plane())
+      let envelope = segment_bounds(segment, plane=after.plane())
       let min = envelope.min()
       let max = envelope.max()
       if !profile.x().contains(min.x()) ||
