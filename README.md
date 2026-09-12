@@ -8,7 +8,7 @@
 
 ## 快速开始
 
-安装 MoonBit 工具链；JS 命令还需 Node.js。在仓库根目录执行：
+安装 MoonBit 工具链（本轮兼容性验收使用 moonc v0.10.12）；JS 命令还需 Node.js。在仓库根目录执行：
 
 ```sh
 moon update
@@ -88,7 +88,7 @@ println(@moongcode.safety_report_text(report))
 
 本地 JS 测得圆弧长度最大绝对误差 **2.274×10⁻¹³ mm**；这是限定样本与解析公式间的浮点误差，**不是设备精度**。
 普通测试由 99 项增至 104 项，本地 wasm-gc、wasm、JS 各 104 项通过。
-CI 增加 JS/native 独立参考检查并上传 JSON；CI 是否通过须查看相应提交的实际运行，不能由本地结果推断。
+提交 `bfdf650` 的远程 CI 已通过：四后端各 104 项普通测试、JS/native 各 470 项独立参考检查通过。实际运行与归档 JSON 见 [CI 记录](docs/maintenance/CI.md)；后续提交须查看其自己的 CI 结果。
 
 ```sh
 moon fmt --check

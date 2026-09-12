@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "source_revision": "bfdf650b55ef026f276ad99a4cfa59347bd37f89",
+  "oracle_sha256": "5f6e8f3196541fbda9957cdd93333bf8ea10c957145de45abb5125cd098c4ca0",
+  "environment": {
+    "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+    "python": "3.12.14",
+    "moon": "moon 0.1.20260904 (94521db 2026-09-04) ~/.moon/bin/moon\nmoonc v0.10.12+1634b282e (2026-09-07) ~/.moon/bin/moonc\nmoonrun 0.1.20260904 (94521db 2026-09-04) ~/.moon/bin/moonrun\n\nFeature flags enabled: rr_moon_mod,rr_moon_pkg",
+    "node": "v22.23.2"
+  },
+  "target": "js",
+  "oracle": "Python math.hypot/pi; no external controller execution",
+  "tolerance": {
+    "relative": 1e-12,
+    "absolute": 1e-09
+  },
+  "groups": {
+    "analytic_arcs": {
+      "total": 432,
+      "passed": 432,
+      "failure_samples": [],
+      "max_length_abs_error_mm": 2.2737367544323206e-13,
+      "max_time_abs_error_seconds": 1.4210854715202004e-14,
+      "max_length_relative_error": 2.098252272534385e-16
+    },
+    "workspace_audits": {
+      "total": 24,
+      "passed": 24,
+      "failure_samples": []
+    },
+    "cli_contracts": {
+      "total": 14,
+      "passed": 14,
+      "failure_samples": []
+    }
+  },
+  "passed": true
+}

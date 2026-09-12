@@ -29,7 +29,7 @@
 
 原始数据：`baseline-js.json`、`current-js.json`。两者记录相同 oracle SHA-256，以及各自源提交、工具链、Python、Node 和操作系统；修复数据对应代码提交 `f9ed665`。
 基线运行以退出 1 结束是预期结果，不能删除失败数据或改低预期来让旧版通过。
-本地环境：Windows，moonc v0.10.4，Node v24.14.0，Python 3.8.5；具体构建标识见 JSON。没有修改其他项目的共享工具链。
+基线对照环境：Windows，moonc v0.10.4，Node v24.14.0，Python 3.8.5；具体构建标识见 JSON。随后在项目旁另装独立 moonc v0.10.12 工具链，修复当前格式与弃用 API 兼容性，四后端严格检查及三后端各 104 项测试重新通过。没有修改共享工具链或用户 PATH；固定依赖 moonbitlang/x@0.4.49 从本机已有缓存读取。
 
 ```sh
 python scripts/verify_reference.py --output _build/reference-js.json
@@ -65,7 +65,7 @@ python scripts/verify_reference.py --repo ../moongcode-baseline --output _build/
 ## 4. 验收与剩余边界
 
 - 本地 `moon fmt --check`、四后端 `moon check --deny-warn` 通过；wasm-gc/wasm/JS 各 104 项普通测试通过。
-- 本地 Native 测试未运行成功：找不到 cl/cc/gcc/clang。Native 实际编译、普通测试和 470 项 CLI 参考检查由 GitHub Actions 验证；结果另见 `CI.md`，不得把类型检查说成 Native 实测。
+- 本地 Native 测试未运行成功：找不到 cl/cc/gcc/clang。Native 实际编译、104 项普通测试和 470 项 CLI 参考检查已在 GitHub Actions 运行 34702797535 中通过；结果与下载的 JSON 见 `CI.md`，不得把本地类型检查说成 Native 本地实测。
 - README 的三个例子已实跑：螺旋分析与审计通过，隐藏 Z 越界按预期退出 1，缺失进给和拼错命令分别退出 1/2。
 - 仍不支持坐标系偏置、刀具补偿、宏与固定循环；不做材料、夹具/刀具碰撞、加减速或物理安全认证。
 - 错误输入的回放可能包含部分运动段；必须检查有效标志/退出码，不能把部分数值用于机床执行。
@@ -80,6 +80,10 @@ python scripts/verify_reference.py --repo ../moongcode-baseline --output _build/
 | `aee3a18` | 有效平面与工作空间审计修复 | 同行/分行等价、隐藏 Z 越界 |
 | `f9ed665` | CLI 参数和失败退出码 | 2 项普通测试及 14 项实际命令行验收 |
 | `d78d1bf` | 独立参考样本与双后端 CI | 470 个构造样本，保留基线和修复 JSON |
-| `docs: explain maintenance evidence and runnable failure cases` | 使用说明、三例、对标与限制 | README 命令、输入文件和本报告可互相核对 |
+| `568bb30` | 使用说明、三例、对标与限制 | README 命令、输入文件和本报告可互相核对 |
 
-以上按完整工作单元计，不用空提交、格式提交或拆行增加维护数量。历史基线已有 22 个提交；本报告只把本轮的五个完整维护单元作为新增工作，不将全部历史提交重新包装为本轮贡献。
+额外兼容性维护 `bfdf650`：根据远程 CI 的真实失败，将两处弃用的 `StringBuilder::new()` 改为构造表达式，并采用当前格式器，保留 `--deny-warn` 与格式门禁；CI 增加工具链版本日志。
+
+以上按完整工作单元计，不用空提交、格式提交或拆行增加维护数量。历史基线已有 22 个提交；本报告把本轮五个初始维护单元及一个工具链兼容单元作为新增工作，不将全部历史提交重新包装为本轮贡献。
+
+验收归档提交仅补充实测 CI、JSON 和文档说明，不再计为一个新的功能修复；本轮保守口径为六个实质维护单元，另有一次验收归档。
