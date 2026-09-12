@@ -45,22 +45,33 @@ fn stats_text(execution : @lib.Execution) -> String {
 ///|
 fn main {
   let raw = @env.args()
+  let args = cli_arguments(raw, runtime_argument_prefix())
+  let command = args[0]
   let commands = [
     "demo", "profiles", "validate", "normalize", "trace", "analyze", "audit", "audit-laser",
     "audit-profile", "audit-md", "explain", "help", "--help", "-h",
   ]
-  let mut command_index = raw.length()
-  for index, value in raw {
-    if command_index == raw.length() && commands.contains(value) {
-      command_index = index
-    }
+  if !commands.contains(command) {
+    println("cli.command.unknown: " + command)
+    println(usage())
+    @sys.exit(2)
+    return
   }
-  let args = if command_index < raw.length() {
-    raw[command_index:].to_owned()
+  let max_args = if command == "audit-profile" {
+    3
+  } else if command == "profiles" ||
+    command == "help" ||
+    command == "--help" ||
+    command == "-h" {
+    1
   } else {
-    ["demo"]
+    2
   }
-  let command = args[0]
+  if args.length() > max_args {
+    println("cli.arguments.extra: unexpected arguments")
+    @sys.exit(2)
+    return
+  }
   if command == "help" || command == "--help" || command == "-h" {
     println(usage())
     return
@@ -99,16 +110,35 @@ fn main {
   }
   if command == "normalize" {
     println(@lib.normalize_program(program, preserve_comments=true))
+    if !program.is_valid() {
+      println(@lib.validate_report(program))
+      @sys.exit(1)
+    }
     return
   }
   if command == "explain" {
     println(@lib.explain_program(program))
+    if !program.is_valid() {
+      println(@lib.validate_report(program))
+      @sys.exit(1)
+    }
     return
   }
   let execution = @lib.execute_program(program)
   match command {
-    "trace" => println(@lib.execution_trace_text(execution))
-    "analyze" => println(stats_text(execution))
+    "trace" | "analyze" => {
+      if command == "trace" {
+        println(@lib.execution_trace_text(execution))
+      } else {
+        println(stats_text(execution))
+      }
+      if !execution.is_valid() {
+        for diagnostic in execution.diagnostics() {
+          println(diagnostic.to_text())
+        }
+        @sys.exit(1)
+      }
+    }
     "audit" => {
       let report = @lib.audit_execution(
         execution,
