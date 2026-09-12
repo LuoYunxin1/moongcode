@@ -157,24 +157,16 @@ fn interpreter_arc_offset(
 }
 
 ///|
-fn interpreter_make_segment(
+fn interpreter_make_linear_segment(
   kind : SegmentKind,
   line : Int,
   start : Point3,
   end : Point3,
-  center : Point3?,
-  radius : Double,
-  sweep : Double,
   feed : Double,
 ) -> Segment {
-  let length = match kind {
-    ClockwiseArcSegment | CounterClockwiseArcSegment => radius * sweep.abs()
-    _ => distance3(start, end)
-  }
+  let length = distance3(start, end)
   let duration = if feed > 0.0 { length / feed * 60.0 } else { 0.0 }
-  Segment::new(
-    kind, line, start, end, center, radius, sweep, length, duration, feed,
-  )
+  Segment::new(kind, line, start, end, None, 0.0, 0.0, length, duration, feed)
 }
 
 ///|
@@ -654,7 +646,9 @@ fn interpret_block(
             } else {
               CounterClockwiseArcSegment
             }
-            let segment = interpreter_make_segment(
+            let length = arc.length_mm()
+            let duration = if feed > 0.0 { length / feed * 60.0 } else { 0.0 }
+            let segment = Segment::new(
               kind,
               block.source_line(),
               start,
@@ -662,6 +656,8 @@ fn interpret_block(
               Some(arc.center()),
               arc.radius_mm(),
               arc.sweep_radians(),
+              length,
+              duration,
               feed,
             )
             if feed <= 0.0 {
@@ -722,14 +718,11 @@ fn interpret_block(
         } else {
           LinearSegment
         }
-        let segment = interpreter_make_segment(
+        let segment = interpreter_make_linear_segment(
           kind,
           block.source_line(),
           start,
           end,
-          None,
-          0.0,
-          0.0,
           selected_feed,
         )
         segments.push(segment)

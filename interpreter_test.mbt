@@ -134,3 +134,23 @@ test "rejects motion after program end" {
   )
   assert_eq(execution.final_state().status(), Ended)
 }
+
+///|
+test "helical replay preserves spatial length and elapsed time" {
+  let execution = interpret_source(
+    "G21 G90 F60\nG0 X10\nG3 X0 Y10 Z10 I-10 J0\n",
+  )
+  assert_true(execution.is_valid())
+  let arc = execution.segments()[1]
+  let expected = 18.620958891185866
+  assert_near(arc.length_mm(), expected, 1.0e-10)
+  assert_near(arc.duration_seconds(), expected, 1.0e-10)
+  let stats = analyze_execution(execution)
+  assert_near(stats.arc_distance_mm(), expected, 1.0e-10)
+  assert_near(stats.estimated_seconds(), expected + 0.1, 1.0e-10)
+  assert_near(
+    execution.final_state().elapsed_seconds(),
+    expected + 0.1,
+    1.0e-10,
+  )
+}
