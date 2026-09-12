@@ -24,7 +24,9 @@ jobs:
         with:
           node-version: '22'
       - name: Resolve dependencies
-        run: moon update
+        run: |
+          moon version --all
+          moon update
       - name: Format and strict checks
         run: |
           moon fmt --check
@@ -73,7 +75,9 @@ jobs:
         with:
           node-version: '22'
       - name: Resolve dependencies
-        run: moon update
+        run: |
+          moon version --all
+          moon update
       - name: Native verification
         run: |
           moon check --target native --deny-warn

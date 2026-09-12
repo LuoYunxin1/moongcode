@@ -31,7 +31,7 @@ pub fn Diagnostic::new(
   column : Int,
   message : String,
 ) -> Diagnostic {
-  { severity, code, line, column, message }
+  { severity, code, line, column, message, }
 }
 
 ///|

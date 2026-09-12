@@ -448,7 +448,7 @@ fn parser_scan_line(source : String, line : Int) -> ScannedLine {
   if after_checksum {
     checksum_raw = Some(checksum_buffer.trim().to_owned())
   }
-  { code, comments, checksum_raw, checksum_column, diagnostics }
+  { code, comments, checksum_raw, checksum_column, diagnostics, }
 }
 
 ///|

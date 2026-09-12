@@ -288,9 +288,9 @@ pub fn target_point(
 /// Project a 3D point into the ordered coordinates of a machine plane.
 pub fn plane_project(plane : Plane, point : Point3) -> PlanePoint {
   match plane {
-    XY => { u: point.x(), v: point.y(), axis: point.z() }
-    ZX => { u: point.z(), v: point.x(), axis: point.y() }
-    YZ => { u: point.y(), v: point.z(), axis: point.x() }
+    XY => { u: point.x(), v: point.y(), axis: point.z(), }
+    ZX => { u: point.z(), v: point.x(), axis: point.y(), }
+    YZ => { u: point.y(), v: point.z(), axis: point.x(), }
   }
 }
 
@@ -313,7 +313,7 @@ pub fn plane_lift(plane : Plane, value : PlanePoint) -> Point3 {
 ///|
 /// Convenience constructor for projected coordinates.
 pub fn PlanePoint::new(u : Double, v : Double, axis : Double) -> PlanePoint {
-  { u, v, axis }
+  { u, v, axis, }
 }
 
 ///|
@@ -349,12 +349,12 @@ pub fn Plane::lift(self : Plane, value : PlanePoint) -> Point3 {
 
 ///|
 pub fn Bounds3::from_points(first : Point3, second : Point3) -> Bounds3 {
-  { min: point_min(first, second), max: point_max(first, second) }
+  { min: point_min(first, second), max: point_max(first, second), }
 }
 
 ///|
 pub fn Bounds3::from_point(point : Point3) -> Bounds3 {
-  { min: point, max: point }
+  { min: point, max: point, }
 }
 
 ///|
@@ -369,12 +369,12 @@ pub fn Bounds3::max(self : Bounds3) -> Point3 {
 
 ///|
 pub fn Bounds3::include_point(self : Bounds3, point : Point3) -> Bounds3 {
-  { min: point_min(self.min, point), max: point_max(self.max, point) }
+  { min: point_min(self.min, point), max: point_max(self.max, point), }
 }
 
 ///|
 pub fn Bounds3::merge(self : Bounds3, other : Bounds3) -> Bounds3 {
-  { min: point_min(self.min, other.min), max: point_max(self.max, other.max) }
+  { min: point_min(self.min, other.min), max: point_max(self.max, other.max), }
 }
 
 ///|
@@ -1101,7 +1101,7 @@ pub fn bounds_of_arc(arc : ArcGeometry) -> Bounds3 {
 
 ///|
 pub fn GeometryBounds::empty() -> GeometryBounds {
-  { bounds: None, count: 0 }
+  { bounds: None, count: 0, }
 }
 
 ///|
@@ -1128,7 +1128,7 @@ pub fn GeometryBounds::add_bounds(
     None => value
     Some(current) => current.merge(value)
   }
-  { bounds: Some(merged), count: self.count + 1 }
+  { bounds: Some(merged), count: self.count + 1, }
 }
 
 ///|
@@ -1155,10 +1155,10 @@ pub fn GeometryBounds::merge(
 ) -> GeometryBounds {
   match (self.bounds, other.bounds) {
     (None, None) => GeometryBounds::empty()
-    (Some(value), None) => { bounds: Some(value), count: self.count }
-    (None, Some(value)) => { bounds: Some(value), count: other.count }
+    (Some(value), None) => { bounds: Some(value), count: self.count, }
+    (None, Some(value)) => { bounds: Some(value), count: other.count, }
     (Some(left), Some(right)) =>
-      { bounds: Some(left.merge(right)), count: self.count + other.count }
+      { bounds: Some(left.merge(right)), count: self.count + other.count, }
   }
 }
 

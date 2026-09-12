@@ -16,12 +16,12 @@ fn split_source_lines(source : String) -> Array[String] {
 ///|
 pub fn split_ascii_fields(source : String) -> Array[String] {
   let fields : Array[String] = []
-  let mut current = StringBuilder::new()
+  let mut current = StringBuilder()
   let mut has_current = false
   let flush = fn() {
     if has_current {
       fields.push(current.to_string())
-      current = StringBuilder::new()
+      current = StringBuilder()
       has_current = false
     }
   }

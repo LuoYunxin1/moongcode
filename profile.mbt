@@ -17,7 +17,7 @@ pub fn AxisLimits::new(
   } else if minimum_mm >= maximum_mm {
     Err("axis minimum must be less than maximum")
   } else {
-    Ok({ minimum_mm, maximum_mm })
+    Ok({ minimum_mm, maximum_mm, })
   }
 }
 

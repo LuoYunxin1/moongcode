@@ -13,7 +13,7 @@ pub fn Word::new(
   raw : String,
   column : Int,
 ) -> Word {
-  { letter, value, raw, column }
+  { letter, value, raw, column, }
 }
 
 ///|
@@ -55,7 +55,7 @@ pub fn Block::new(
   checksum : Int?,
   raw : String,
 ) -> Block {
-  { source_line, sequence, words: words.copy(), comment, checksum, raw }
+  { source_line, sequence, words: words.copy(), comment, checksum, raw, }
 }
 
 ///|
@@ -125,7 +125,7 @@ pub fn Program::new(
   blocks : Array[Block],
   diagnostics : Array[Diagnostic],
 ) -> Program {
-  { blocks: blocks.copy(), diagnostics: diagnostics.copy() }
+  { blocks: blocks.copy(), diagnostics: diagnostics.copy(), }
 }
 
 ///|
@@ -284,12 +284,12 @@ pub struct Point3 {
 
 ///|
 pub fn Point3::new(x : Double, y : Double, z : Double) -> Point3 {
-  { x, y, z }
+  { x, y, z, }
 }
 
 ///|
 pub fn Point3::origin() -> Point3 {
-  { x: 0.0, y: 0.0, z: 0.0 }
+  { x: 0.0, y: 0.0, z: 0.0, }
 }
 
 ///|
@@ -309,17 +309,17 @@ pub fn Point3::z(self : Point3) -> Double {
 
 ///|
 pub fn Point3::with_x(self : Point3, x : Double) -> Point3 {
-  { x, y: self.y, z: self.z }
+  { x, y: self.y, z: self.z, }
 }
 
 ///|
 pub fn Point3::with_y(self : Point3, y : Double) -> Point3 {
-  { x: self.x, y, z: self.z }
+  { x: self.x, y, z: self.z, }
 }
 
 ///|
 pub fn Point3::with_z(self : Point3, z : Double) -> Point3 {
-  { x: self.x, y: self.y, z }
+  { x: self.x, y: self.y, z, }
 }
 
 ///|

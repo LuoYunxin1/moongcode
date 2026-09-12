@@ -323,7 +323,7 @@ pub fn audit_execution(
       ),
     )
   }
-  { stats: analyze_execution(execution), findings }
+  { stats: analyze_execution(execution), findings, }
 }
 
 ///|
